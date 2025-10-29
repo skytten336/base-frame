@@ -1,0 +1,27 @@
+node_modules/
+.env
+
+# Hardhat build
+/cache
+/artifacts
+
+# TypeChain files
+/typechain
+/typechain-types
+
+# solidity-coverage files
+/coverage
+/coverage.json
+
+# Hardhat Ignition default folder for deployments against a local node
+ignition/deployments/chain-31337
+
+# Next.js build
+.next/
+.turbo/
+.vercel/
+out/
+
+# OS files
+.DS_Store
+Thumbs.db
