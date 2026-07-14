@@ -1,8 +1,6 @@
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  experimental: {
-    serverComponentsExternalPackages: ['frog'],
-  },
+  reactStrictMode: false,
 };
 
 export default nextConfig;

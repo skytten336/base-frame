@@ -4,6 +4,7 @@ export default function Home() {
       <div>
         <h1>Base Farcaster Frame — Starter</h1>
         <p>Перевірка: endpoint для Frame — <code>/api</code></p>
+        <p><a href="/api">Перейти до Farcaster Frame</a></p>
       </div>
     </main>
   );
