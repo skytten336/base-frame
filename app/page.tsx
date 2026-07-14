@@ -4,7 +4,7 @@ import { sdk } from '@farcaster/miniapp-sdk';
 import { encodeFunctionData } from 'viem';
 import { useEffect, useState } from 'react';
 
-const CONTRACT_ADDRESS = '0x38579E3A48673F05F3847B65744919d448c521D8';
+const CONTRACT_ADDRESS = '0x16050F4246C1C97A3Da2A73f7736b44A3062B4b8';
 const BASE_CHAIN_ID = '0x2105';
 
 const NFT_ABI = [

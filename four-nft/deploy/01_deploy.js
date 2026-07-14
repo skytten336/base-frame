@@ -3,10 +3,10 @@ const hre = require("hardhat");
 
 async function main() {
   const uris = [
-    "ipfs/bafybeibrpcw4xpmmuysxyckc2sthqszmuyxsnup3xxnsrxkwuc27pwalze/0.json",
-    "ipfs/bafybeibrpcw4xpmmuysxyckc2sthqszmuyxsnup3xxnsrxkwuc27pwalze/1.json",
-    "ipfs/bafybeibrpcw4xpmmuysxyckc2sthqszmuyxsnup3xxnsrxkwuc27pwalze/2.json",
-    "ipfs/bafybeibrpcw4xpmmuysxyckc2sthqszmuyxsnup3xxnsrxkwuc27pwalze/3.json",
+    "ipfs://bafybeibrpcw4xpmmuysxyckc2sthqszmuyxsnup3xxnsrxkwuc27pwalze/0.json",
+    "ipfs://bafybeibrpcw4xpmmuysxyckc2sthqszmuyxsnup3xxnsrxkwuc27pwalze/1.json",
+    "ipfs://bafybeibrpcw4xpmmuysxyckc2sthqszmuyxsnup3xxnsrxkwuc27pwalze/2.json",
+    "ipfs://bafybeibrpcw4xpmmuysxyckc2sthqszmuyxsnup3xxnsrxkwuc27pwalze/3.json",
   ];
 
   const RandomFourNFT = await hre.ethers.getContractFactory("RandomFourNFT");

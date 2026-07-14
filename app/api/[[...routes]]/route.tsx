@@ -6,7 +6,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const DEFAULT_CONTRACT_ADDRESS =
-  '0x38579E3A48673F05F3847B65744919d448c521D8';
+  '0x16050F4246C1C97A3Da2A73f7736b44A3062B4b8';
 
 const CONTRACT_ADDRESS = (
   /^0x[0-9a-fA-F]{40}$/.test(process.env.CONTRACT_ADDRESS ?? '')
