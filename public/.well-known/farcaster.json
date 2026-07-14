@@ -1,0 +1,36 @@
+{
+  "miniapp": {
+    "version": "1",
+    "name": "Base Roles",
+    "homeUrl": "https://base-frame-plum.vercel.app",
+    "iconUrl": "https://base-frame-plum.vercel.app/icon.png",
+    "imageUrl": "https://base-frame-plum.vercel.app/preview.png",
+    "buttonTitle": "Mint your Base role",
+    "splashImageUrl": "https://base-frame-plum.vercel.app/splash.png",
+    "splashBackgroundColor": "#020B20",
+    "subtitle": "Mint your Base identity",
+    "description": "Mint one of four onchain identities on Base: Builder, Creator, Farmer, or Basehead.",
+    "primaryCategory": "art-creativity",
+    "tags": [
+      "base",
+      "nft",
+      "collectibles",
+      "onchain",
+      "identity"
+    ],
+    "heroImageUrl": "https://base-frame-plum.vercel.app/hero.png",
+    "tagline": "Discover your Base identity",
+    "ogTitle": "Base Roles",
+    "ogDescription": "Mint one of four onchain identities on Base.",
+    "ogImageUrl": "https://base-frame-plum.vercel.app/og.png",
+    "requiredChains": [
+      "eip155:8453"
+    ],
+    "requiredCapabilities": [
+      "wallet.getEthereumProvider",
+      "actions.ready"
+    ],
+    "canonicalDomain": "base-frame-plum.vercel.app",
+    "noindex": false
+  }
+}
