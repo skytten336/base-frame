@@ -3,9 +3,12 @@
 import { sdk } from '@farcaster/miniapp-sdk';
 import { encodeFunctionData } from 'viem';
 import { useEffect, useState } from 'react';
+import styles from './page.module.css';
 
 const CONTRACT_ADDRESS = '0x16050F4246C1C97A3Da2A73f7736b44A3062B4b8';
 const BASE_CHAIN_ID = '0x2105';
+const APP_URL = 'https://base-frame-plum.vercel.app';
+const EXPLORER_URL = `https://basescan.org/address/${CONTRACT_ADDRESS}`;
 
 const NFT_ABI = [
   {
@@ -17,11 +20,24 @@ const NFT_ABI = [
   },
 ] as const;
 
+type MintStatus = 'idle' | 'confirming' | 'submitted' | 'success' | 'error';
+type TxReceipt = {
+  status?: string;
+  logs?: Array<{ address: string; topics: string[] }>;
+};
+
+const roles = ['Builder', 'Creator', 'Farmer', 'Basehead'];
+
+function wait(delay: number) {
+  return new Promise((resolve) => window.setTimeout(resolve, delay));
+}
+
 export default function Home() {
   const [isMiniApp, setIsMiniApp] = useState<boolean | null>(null);
-  const [isMinting, setIsMinting] = useState(false);
+  const [status, setStatus] = useState<MintStatus>('idle');
   const [message, setMessage] = useState('');
   const [transactionHash, setTransactionHash] = useState('');
+  const [tokenId, setTokenId] = useState('');
 
   useEffect(() => {
     let active = true;
@@ -37,9 +53,10 @@ export default function Home() {
   }, []);
 
   async function mint() {
-    setIsMinting(true);
+    setStatus('confirming');
     setMessage('');
     setTransactionHash('');
+    setTokenId('');
 
     try {
       const provider = await sdk.wallet.getEthereumProvider();
@@ -72,132 +89,159 @@ export default function Home() {
       })) as string;
 
       setTransactionHash(hash);
-      setMessage('Transaction submitted. Your Base role is being minted.');
+      setStatus('submitted');
+
+      let receipt: TxReceipt | null = null;
+      for (let attempt = 0; attempt < 45; attempt += 1) {
+        receipt = (await provider.request({
+          method: 'eth_getTransactionReceipt',
+          params: [hash],
+        })) as TxReceipt | null;
+        if (receipt) break;
+        await wait(2000);
+      }
+
+      if (!receipt) {
+        setMessage('The transaction is still processing. Follow it on BaseScan.');
+        return;
+      }
+      if (receipt.status !== '0x1') {
+        throw new Error('The transaction failed on Base.');
+      }
+
+      const transferLog = receipt.logs?.find(
+        (log) =>
+          log.address.toLowerCase() === CONTRACT_ADDRESS.toLowerCase() &&
+          log.topics.length > 3,
+      );
+      if (transferLog?.topics[3]) {
+        setTokenId(BigInt(transferLog.topics[3]).toString());
+      }
+
+      setStatus('success');
+      try {
+        await sdk.haptics.notificationOccurred('success');
+      } catch {
+        // Haptics are optional and unavailable in some hosts.
+      }
     } catch (error) {
+      setStatus('error');
       setMessage(error instanceof Error ? error.message : 'Mint was cancelled.');
-    } finally {
-      setIsMinting(false);
     }
   }
 
-  return (
-    <main
-      style={{
-        minHeight: '100dvh',
-        background:
-          'radial-gradient(circle at 50% 0%, #06336b 0%, #020b20 48%, #010512 100%)',
-        color: '#ffffff',
-        fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif',
-        padding: '20px',
-        boxSizing: 'border-box',
-      }}
-    >
-      <section
-        style={{
-          width: '100%',
-          maxWidth: 520,
-          margin: '0 auto',
-          display: 'grid',
-          gap: 18,
-        }}
-      >
-        <img
-          src="/hero.png"
-          alt="Base Roles: Builder, Basehead, Farmer, and Creator"
-          style={{
-            width: '100%',
-            aspectRatio: '1200 / 630',
-            objectFit: 'cover',
-            borderRadius: 22,
-            border: '1px solid rgba(75, 214, 255, 0.35)',
-            boxShadow: '0 20px 60px rgba(0, 138, 255, 0.22)',
-          }}
-        />
+  async function share() {
+    await sdk.actions.composeCast({
+      text: 'I just minted my onchain Base role. Which one are you?',
+      embeds: [APP_URL],
+    });
+  }
 
-        <div style={{ textAlign: 'center' }}>
-          <div
-            style={{
-              color: '#53dcff',
-              fontSize: 13,
-              fontWeight: 800,
-              letterSpacing: '0.16em',
-              textTransform: 'uppercase',
-            }}
-          >
-            On Base
+  const isBusy = status === 'confirming' || status === 'submitted';
+  const transactionUrl = transactionHash
+    ? `https://basescan.org/tx/${transactionHash}`
+    : EXPLORER_URL;
+
+  if (status === 'success') {
+    return (
+      <main className={styles.main}>
+        <section className={`${styles.card} ${styles.successCard}`}>
+          <div className={styles.successGlow} aria-hidden="true" />
+          <div className={styles.successIcon} aria-hidden="true">
+            <span>✓</span>
           </div>
-          <h1 style={{ margin: '8px 0', fontSize: 36, lineHeight: 1.05 }}>
-            Mint your Base role
-          </h1>
-          <p style={{ margin: 0, color: '#adbed9', fontSize: 16, lineHeight: 1.5 }}>
-            Receive one of four onchain identities: Builder, Creator, Farmer, or
-            Basehead.
+          <div className={styles.eyebrow}>Mint complete</div>
+          <h1 className={styles.successTitle}>Your Base role is onchain</h1>
+          <p className={styles.successCopy}>
+            {tokenId ? `Token #${tokenId}` : 'Your NFT'} now belongs to your wallet on Base.
           </p>
+          <div className={styles.successActions}>
+            <button type="button" className={styles.primaryButton} onClick={share}>
+              Share on Farcaster
+            </button>
+            <a className={styles.secondaryButton} href={transactionUrl} target="_blank" rel="noreferrer">
+              View on BaseScan <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <button type="button" className={styles.textButton} onClick={() => setStatus('idle')}>
+            Back to Base Roles
+          </button>
+        </section>
+      </main>
+    );
+  }
+
+  return (
+    <main className={styles.main}>
+      <section className={styles.card}>
+        <header className={styles.brandRow}>
+          <div className={styles.brand}>
+            <span className={styles.brandMark} aria-hidden="true" />
+            Base Roles
+          </div>
+          <span className={styles.networkBadge}>Base</span>
+        </header>
+
+        <div className={styles.heroWrap}>
+          <img
+            className={styles.hero}
+            src="/hero-v2.jpg"
+            alt="Futuristic blue Base Roles android"
+          />
+          <div className={styles.heroShade} aria-hidden="true" />
+        </div>
+
+        <div className={styles.intro}>
+          <div className={styles.eyebrow}>Your identity on Base</div>
+          <h1 className={styles.title}>Discover your Base role</h1>
+          <p className={styles.copy}>Mint one of four onchain identities.</p>
+        </div>
+
+        <div className={styles.roles} aria-label="Available roles">
+          {roles.map((role) => (
+            <span className={styles.role} key={role}>
+              <span className={styles.roleDot} aria-hidden="true" />
+              {role}
+            </span>
+          ))}
         </div>
 
         <button
           type="button"
           onClick={mint}
-          disabled={isMinting || isMiniApp === false}
-          style={{
-            width: '100%',
-            border: 0,
-            borderRadius: 16,
-            padding: '16px 20px',
-            background:
-              isMinting || isMiniApp === false
-                ? '#25415f'
-                : 'linear-gradient(135deg, #18c8ff, #0878ff)',
-            color: '#ffffff',
-            cursor: isMinting || isMiniApp === false ? 'not-allowed' : 'pointer',
-            fontSize: 17,
-            fontWeight: 800,
-            boxShadow:
-              isMinting || isMiniApp === false
-                ? 'none'
-                : '0 12px 34px rgba(0, 148, 255, 0.35)',
-          }}
+          disabled={isBusy || isMiniApp === false}
+          className={styles.primaryButton}
         >
-          {isMinting
-            ? 'Confirm in wallet...'
-            : isMiniApp === false
-              ? 'Open in Farcaster to mint'
-              : 'Mint NFT'}
+          {status === 'confirming'
+            ? 'Confirm in wallet'
+            : status === 'submitted'
+              ? 'Minting on Base…'
+              : isMiniApp === false
+                ? 'Open in Farcaster to mint'
+                : 'Mint my role'}
+          {!isBusy && isMiniApp !== false && <span aria-hidden="true">→</span>}
+          {isBusy && <span className={styles.spinner} aria-hidden="true" />}
         </button>
 
-        {message && (
-          <div
-            role="status"
-            style={{
-              padding: '14px 16px',
-              borderRadius: 14,
-              background: 'rgba(10, 35, 70, 0.8)',
-              border: '1px solid rgba(83, 220, 255, 0.22)',
-              color: transactionHash ? '#7fffd4' : '#d5e4fa',
-              fontSize: 14,
-              lineHeight: 1.45,
-              overflowWrap: 'anywhere',
-            }}
-          >
+        <div className={styles.trustRow}>
+          <span><span className={styles.statusDot} aria-hidden="true" />Free mint</span>
+          <span>Base network</span>
+        </div>
+
+        {(message || status === 'error') && (
+          <div className={status === 'error' ? styles.errorBox : styles.statusBox} role="status">
             {message}
             {transactionHash && (
-              <div style={{ marginTop: 6, color: '#8fb1dc' }}>
-                Tx: {transactionHash.slice(0, 10)}...{transactionHash.slice(-8)}
-              </div>
+              <a href={transactionUrl} target="_blank" rel="noreferrer">
+                View transaction ↗
+              </a>
             )}
           </div>
         )}
 
-        <div
-          style={{
-            textAlign: 'center',
-            color: '#69809f',
-            fontSize: 12,
-            overflowWrap: 'anywhere',
-          }}
-        >
-          Contract: {CONTRACT_ADDRESS}
-        </div>
+        <a className={styles.contractLink} href={EXPLORER_URL} target="_blank" rel="noreferrer">
+          Contract: {CONTRACT_ADDRESS.slice(0, 6)}…{CONTRACT_ADDRESS.slice(-4)} <span aria-hidden="true">↗</span>
+        </a>
       </section>
     </main>
   );

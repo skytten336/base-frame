@@ -1,0 +1,369 @@
+.main {
+  min-height: 100dvh;
+  display: grid;
+  place-items: start center;
+  padding: 18px;
+  overflow: hidden;
+  color: #f8fbff;
+  font-family: Inter, "SF Pro Display", "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 50% -12%, rgba(0, 82, 255, 0.34), transparent 42%),
+    radial-gradient(circle at 105% 80%, rgba(0, 194, 255, 0.09), transparent 34%),
+    #020817;
+}
+
+.main,
+.main * {
+  box-sizing: border-box;
+}
+
+.card {
+  position: relative;
+  width: min(100%, 460px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(132, 178, 255, 0.15);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(7, 21, 48, 0.98), rgba(3, 12, 31, 0.98));
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.42);
+}
+
+.brandRow,
+.brand,
+.trustRow,
+.role,
+.primaryButton,
+.secondaryButton {
+  display: flex;
+  align-items: center;
+}
+
+.brandRow {
+  justify-content: space-between;
+  min-height: 28px;
+  padding: 0 2px;
+}
+
+.brand {
+  gap: 9px;
+  font-size: 14px;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+
+.brandMark {
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  background: #0052ff;
+  box-shadow: 0 0 18px rgba(0, 82, 255, 0.72);
+}
+
+.networkBadge {
+  padding: 5px 9px;
+  border: 1px solid rgba(123, 165, 238, 0.17);
+  border-radius: 999px;
+  color: #8fa9d2;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.heroWrap {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  border: 1px solid rgba(66, 177, 255, 0.22);
+  border-radius: 22px;
+  background: #03122d;
+  box-shadow: 0 18px 52px rgba(0, 95, 255, 0.16);
+}
+
+.hero {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center 43%;
+}
+
+.heroShade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 64%, rgba(2, 8, 23, 0.42));
+}
+
+.intro {
+  text-align: center;
+}
+
+.eyebrow {
+  color: #4da3ff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.title,
+.successTitle {
+  margin: 7px 0 0;
+  color: #ffffff;
+  font-size: clamp(29px, 8.3vw, 38px);
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+}
+
+.copy,
+.successCopy {
+  margin: 9px 0 0;
+  color: #9db0ce;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.roles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.role {
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 9px 5px;
+  overflow: hidden;
+  border: 1px solid rgba(112, 160, 236, 0.14);
+  border-radius: 12px;
+  color: #c6d5ed;
+  font-size: 11px;
+  font-weight: 650;
+  background: rgba(255, 255, 255, 0.035);
+  white-space: nowrap;
+}
+
+.roleDot,
+.statusDot {
+  flex: 0 0 auto;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #40bcff;
+  box-shadow: 0 0 9px #008cff;
+}
+
+.primaryButton,
+.secondaryButton {
+  width: 100%;
+  min-height: 56px;
+  justify-content: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 16px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.primaryButton {
+  color: #ffffff;
+  cursor: pointer;
+  background: linear-gradient(110deg, #0052ff, #1688ff 58%, #24b7ff);
+  box-shadow: 0 14px 36px rgba(0, 82, 255, 0.34), inset 0 1px rgba(255, 255, 255, 0.24);
+  transition: transform 160ms ease, filter 160ms ease, box-shadow 160ms ease;
+}
+
+.primaryButton:hover:not(:disabled) {
+  filter: brightness(1.08);
+  box-shadow: 0 16px 42px rgba(0, 100, 255, 0.42), inset 0 1px rgba(255, 255, 255, 0.3);
+}
+
+.primaryButton:active:not(:disabled) {
+  transform: translateY(1px) scale(0.995);
+}
+
+.primaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.42);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+}
+
+.trustRow {
+  justify-content: center;
+  gap: 16px;
+  margin-top: -5px;
+  color: #6f86aa;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.trustRow span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.statusBox,
+.errorBox {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: 13px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.statusBox {
+  border: 1px solid rgba(61, 188, 255, 0.2);
+  color: #b9d8f5;
+  background: rgba(0, 82, 255, 0.08);
+}
+
+.errorBox {
+  border: 1px solid rgba(255, 115, 125, 0.22);
+  color: #ffd4d8;
+  background: rgba(255, 71, 87, 0.08);
+}
+
+.statusBox a,
+.errorBox a {
+  color: #66bdff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.contractLink {
+  align-self: center;
+  color: #536b91;
+  font-size: 11px;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.contractLink:hover {
+  color: #8ebff0;
+}
+
+.successCard {
+  min-height: min(640px, calc(100dvh - 36px));
+  justify-content: center;
+  align-items: center;
+  padding: 38px 24px;
+  text-align: center;
+}
+
+.successGlow {
+  position: absolute;
+  top: -180px;
+  left: 50%;
+  width: 440px;
+  height: 440px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: rgba(0, 101, 255, 0.26);
+  filter: blur(70px);
+  pointer-events: none;
+}
+
+.successIcon {
+  position: relative;
+  width: 104px;
+  height: 104px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 8px;
+  border: 1px solid rgba(92, 207, 255, 0.42);
+  border-radius: 32px;
+  color: #ffffff;
+  font-size: 40px;
+  font-weight: 800;
+  background: linear-gradient(145deg, rgba(0, 82, 255, 0.9), rgba(0, 194, 255, 0.62));
+  box-shadow: 0 22px 70px rgba(0, 102, 255, 0.38), inset 0 1px rgba(255, 255, 255, 0.3);
+}
+
+.successIcon span {
+  transform: translateY(-2px);
+}
+
+.successTitle {
+  max-width: 350px;
+}
+
+.successCopy {
+  max-width: 330px;
+  margin-bottom: 8px;
+}
+
+.successActions {
+  width: 100%;
+  display: grid;
+  gap: 10px;
+}
+
+.secondaryButton {
+  border: 1px solid rgba(131, 176, 241, 0.18);
+  color: #d6e5fb;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.textButton {
+  border: 0;
+  color: #6e89b0;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+  background: transparent;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 0;
+  }
+
+  .card {
+    min-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .roles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .role {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primaryButton,
+  .contractLink {
+    transition: none;
+  }
+
+  .spinner {
+    animation-duration: 1.5s;
+  }
+}

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import './globals.css';
 
 const APP_URL = 'https://base-frame-plum.vercel.app';
 
@@ -46,7 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body style={{ margin: 0, background: '#020b20' }}>{children}</body>
+      <body>{children}</body>
     </html>
   );
 }
